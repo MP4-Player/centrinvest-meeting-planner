@@ -9,6 +9,7 @@ import { MeetingsPage } from '@/pages/dashboard/MeetingsPage'
 import { ClientsPage } from '@/pages/dashboard/ClientsPage'
 import { TasksPage } from '@/pages/dashboard/TasksPage'
 import { StatisticsPage } from '@/pages/dashboard/StatisticsPage'
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
 
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -42,91 +43,93 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
 
 function App() {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<LandingPage />} />
-      <Route 
-        path="/login" 
-        element={
-          <PublicRoute>
-            <LoginForm />
-          </PublicRoute>
-        } 
-      />
-      <Route 
-        path="/register" 
-        element={
-          <PublicRoute>
-            <RegisterForm />
-          </PublicRoute>
-        } 
-      />
+    <ErrorBoundary>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<LandingPage />} />
+        <Route 
+          path="/login" 
+          element={
+            <PublicRoute>
+              <LoginForm />
+            </PublicRoute>
+          } 
+        />
+        <Route 
+          path="/register" 
+          element={
+            <PublicRoute>
+              <RegisterForm />
+            </PublicRoute>
+          } 
+        />
 
-      {/* Protected Routes */}
-      <Route 
-        path="/dashboard" 
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <Navigate to="/dashboard/map" replace />
-            </Layout>
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/dashboard/map" 
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <MapPage />
-            </Layout>
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/dashboard/meetings" 
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <MeetingsPage />
-            </Layout>
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/dashboard/clients" 
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <ClientsPage />
-            </Layout>
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/dashboard/tasks" 
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <TasksPage />
-            </Layout>
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/dashboard/statistics" 
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <StatisticsPage />
-            </Layout>
-          </ProtectedRoute>
-        } 
-      />
+        {/* Protected Routes */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Navigate to="/dashboard/map" replace />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/dashboard/map" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <MapPage />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/dashboard/meetings" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <MeetingsPage />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/dashboard/clients" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <ClientsPage />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/dashboard/tasks" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <TasksPage />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/dashboard/statistics" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <StatisticsPage />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
 
-      {/* Catch all route */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        {/* Catch all route */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </ErrorBoundary>
   )
 }
 

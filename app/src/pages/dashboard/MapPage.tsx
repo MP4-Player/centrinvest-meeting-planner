@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Search, MapPin, Navigation, Route } from 'lucide-react'
+import { Search, MapPin, Navigation, Route, Zap, Target } from 'lucide-react'
 import { apiService } from '@/services/api'
+import { Kaleidoscope } from '@/components/ui/Kaleidoscope'
 
 export const MapPage = () => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -65,66 +66,73 @@ export const MapPage = () => {
       </div>
 
       {/* Map Container */}
-      <div className="flex-1 relative bg-gray-100">
+      <div className="flex-1 relative bg-gradient-to-br from-primary-50 to-accent-50">
         {!mapLoaded ? (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Загрузка карты...</p>
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-200 border-t-primary-600 mx-auto mb-6"></div>
+              <p className="text-text-secondary text-lg">Загрузка карты...</p>
             </div>
           </div>
         ) : (
-          <div className="h-full bg-gradient-to-br from-blue-50 to-green-50 relative overflow-hidden">
-            {/* Mock Map Content */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <MapPin className="h-8 w-8 text-white" />
+          <div className="h-full relative overflow-hidden">
+            {/* Калейдоскоп дашборда */}
+            <div className="absolute inset-0">
+              <Kaleidoscope />
+            </div>
+
+            {/* Интерактивные элементы поверх калейдоскопа */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="text-center text-white/90">
+                <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+                  <MapPin className="h-10 w-10 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-3xl font-display font-bold mb-4">
                   Интерактивная карта
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-xl mb-8 max-w-2xl">
                   Здесь будет отображаться карта с местоположениями встреч, клиентов и задач
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl">
-                  <div className="bg-white p-4 rounded-lg shadow-sm">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <MapPin className="h-4 w-4 text-blue-600" />
+                
+                {/* Информационные карточки */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl pointer-events-auto">
+                  <div className="card glass-effect p-6 text-text-primary">
+                    <div className="w-12 h-12 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-float">
+                      <MapPin className="h-6 w-6 text-white" />
                     </div>
-                    <h4 className="font-medium text-gray-900 mb-1">Встречи</h4>
-                    <p className="text-sm text-gray-600">Места проведения встреч</p>
+                    <h4 className="font-semibold text-lg mb-2">Встречи</h4>
+                    <p className="text-sm text-text-secondary">Места проведения встреч</p>
                   </div>
-                  <div className="bg-white p-4 rounded-lg shadow-sm">
-                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <MapPin className="h-4 w-4 text-green-600" />
+                  <div className="card glass-effect p-6 text-text-primary">
+                    <div className="w-12 h-12 bg-gradient-to-br from-accent-400 to-accent-600 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse-slow">
+                      <Target className="h-6 w-6 text-white" />
                     </div>
-                    <h4 className="font-medium text-gray-900 mb-1">Клиенты</h4>
-                    <p className="text-sm text-gray-600">Адреса клиентов</p>
+                    <h4 className="font-semibold text-lg mb-2">Клиенты</h4>
+                    <p className="text-sm text-text-secondary">Адреса клиентов</p>
                   </div>
-                  <div className="bg-white p-4 rounded-lg shadow-sm">
-                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <MapPin className="h-4 w-4 text-purple-600" />
+                  <div className="card glass-effect p-6 text-text-primary">
+                    <div className="w-12 h-12 bg-gradient-to-br from-secondary-400 to-secondary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-bounce-slow">
+                      <Zap className="h-6 w-6 text-white" />
                     </div>
-                    <h4 className="font-medium text-gray-900 mb-1">Задачи</h4>
-                    <p className="text-sm text-gray-600">Места выполнения задач</p>
+                    <h4 className="font-semibold text-lg mb-2">Задачи</h4>
+                    <p className="text-sm text-text-secondary">Места выполнения задач</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Mock Map Markers */}
-            <div className="absolute top-1/4 left-1/4">
-              <div className="w-4 h-4 bg-blue-500 rounded-full shadow-lg"></div>
+            {/* Анимированные маркеры */}
+            <div className="absolute top-1/4 left-1/4 animate-float">
+              <div className="w-6 h-6 bg-primary-500 rounded-full shadow-lg animate-pulse"></div>
             </div>
-            <div className="absolute top-1/3 right-1/3">
-              <div className="w-4 h-4 bg-green-500 rounded-full shadow-lg"></div>
+            <div className="absolute top-1/3 right-1/3 animate-pulse-slow">
+              <div className="w-6 h-6 bg-accent-500 rounded-full shadow-lg"></div>
             </div>
-            <div className="absolute bottom-1/3 left-1/3">
-              <div className="w-4 h-4 bg-purple-500 rounded-full shadow-lg"></div>
+            <div className="absolute bottom-1/3 left-1/3 animate-bounce-slow">
+              <div className="w-6 h-6 bg-secondary-500 rounded-full shadow-lg"></div>
             </div>
-            <div className="absolute bottom-1/4 right-1/4">
-              <div className="w-4 h-4 bg-red-500 rounded-full shadow-lg"></div>
+            <div className="absolute bottom-1/4 right-1/4 animate-star-twinkle">
+              <div className="w-6 h-6 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full shadow-lg"></div>
             </div>
           </div>
         )}
