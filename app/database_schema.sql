@@ -56,6 +56,15 @@ INSERT INTO meeting_types (name, default_duration, color, bg_color, border_color
 ('other', 60, '#6B7280', '#F9FAFB', '#6B7280', FALSE)
 ON CONFLICT (name) DO NOTHING;
 
+-- Insert test client and user for development
+INSERT INTO clients (id, first_name, last_name, email, phone, address, priority) VALUES
+('00000000-0000-0000-0000-000000000001', 'Тестовый', 'Клиент', 'test@client.com', '+7-999-123-45-67', 'Москва, ул. Тестовая, д. 1', 'standard')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO users (id, email, password_hash, first_name, last_name, role) VALUES
+('00000000-0000-0000-0000-000000000001', 'test@user.com', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'Тестовый', 'Пользователь', 'employee')
+ON CONFLICT (id) DO NOTHING;
+
 -- Meetings table (extended)
 CREATE TABLE IF NOT EXISTS meetings (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
