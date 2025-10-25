@@ -246,4 +246,149 @@
     from, to { border-color: transparent }
     50% { border-color: currentColor }
   }
+
+  /* Mobile optimizations for meetings page */
+  @media (max-width: 640px) {
+    /* Touch-friendly drag and drop */
+    [draggable="true"] {
+      -webkit-user-select: none;
+      user-select: none;
+      touch-action: none;
+    }
+
+    /* Larger touch targets for mobile */
+    .meeting-card,
+    .schedule-item {
+      min-height: 80px;
+      padding: 16px;
+    }
+
+    /* Optimize modal for mobile */
+    .modal-content {
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    /* Better spacing for form inputs on mobile */
+    .input-field {
+      font-size: 16px; /* Prevents zoom on iOS */
+      padding: 12px;
+    }
+
+    /* Sticky headers for better mobile UX */
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  /* Tablet optimizations */
+  @media (min-width: 640px) and (max-width: 1024px) {
+    /* Two-column layout for meeting cards */
+    .meeting-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Adjust card sizes for tablets */
+    .card {
+      padding: 1.25rem;
+    }
+  }
+
+  /* Desktop optimizations */
+  @media (min-width: 1024px) {
+    /* Three-column layout for larger screens */
+    .meeting-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* More spacious layout on desktop */
+    .card {
+      padding: 1.5rem;
+    }
+
+    /* Hover effects only on desktop (not touch devices) */
+    @media (hover: hover) {
+      .meeting-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  /* Prevent text selection during drag */
+  .dragging * {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Drag feedback */
+  .drag-over {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: #3b82f6;
+  }
+
+  /* Smooth transitions for drag and drop */
+  .draggable-item {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .draggable-item.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+
+  /* Accessibility improvements */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Dark mode support for future */
+  @media (prefers-color-scheme: dark) {
+    /* Dark mode styles can be added here */
+  }
+
+  /* Landscape orientation optimizations for mobile */
+  @media (max-width: 900px) and (orientation: landscape) {
+    .modal-content {
+      max-height: 80vh;
+    }
+
+    /* Reduce padding in landscape to fit more content */
+    .p-6 {
+      padding: 0.75rem;
+    }
+  }
+
+  /* Print styles */
+  @media print {
+    .no-print,
+    button,
+    .btn-primary,
+    .btn-secondary,
+    .btn-accent {
+      display: none !important;
+    }
+
+    .card {
+      break-inside: avoid;
+    }
+  }
+
+  /* Safe area insets for notched devices (iPhone X, etc.) */
+  @supports (padding-top: env(safe-area-inset-top)) {
+    body {
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+  }
 }

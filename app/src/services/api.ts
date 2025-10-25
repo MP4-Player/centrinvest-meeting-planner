@@ -9,7 +9,7 @@ class ApiService {
   // Auth methods
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     // Check for admin user
-    if (credentials.email === 'admin@example.com' && credentials.password === 'Admin') {
+    if (credentials.email === 'admin@example.com' && credentials.password === 'Admin1') {
       const adminUser = {
         id: 'admin-1',
         email: 'admin@example.com',
@@ -122,6 +122,73 @@ class ApiService {
   async delete<T>(endpoint: string): Promise<T> {
     // Mock delete - return success
     return { success: true } as T
+  }
+
+  // Route optimization endpoint
+  async optimizeRoute(meetingIds: string[], startLocation?: {
+    latitude: number
+    longitude: number
+    address: string
+  }): Promise<any> {
+    await this.delay(1500) // Simulate API call
+
+    // Mock route optimization logic
+    // In real implementation, this would call a backend service that uses
+    // a routing algorithm (e.g., Google Maps API, OSRM, etc.)
+
+    const meetings = meetingIds.map(id => {
+      // Find meeting from mock data
+      const mockMeetings = this.getMockMeetings({})
+      const meeting = mockMeetings.data.find((m: any) => m.id === id)
+      return meeting
+    }).filter(Boolean)
+
+    // Simple optimization: sort by location (in reality would use proper routing)
+    const optimizedSchedule = meetings.map((meeting: any, index: number) => ({
+      id: `schedule-${meeting.id}`,
+      meetingId: meeting.id,
+      meeting,
+      order: index + 1,
+      estimatedTravelTime: Math.floor(Math.random() * 30) + 10, // Mock: 10-40 min
+      distance: Math.floor(Math.random() * 10000) + 1000, // Mock: 1-11 km
+    }))
+
+    const totalDistance = optimizedSchedule.reduce((sum: number, item: any) =>
+      sum + (item.distance || 0), 0
+    )
+    const totalTravelTime = optimizedSchedule.reduce((sum: number, item: any) =>
+      sum + (item.estimatedTravelTime || 0), 0
+    )
+
+    // Calculate total duration including meeting times
+    const totalDuration = totalTravelTime + meetings.reduce((sum: number, meeting: any) => {
+      const start = new Date(meeting.startDate).getTime()
+      const end = new Date(meeting.endDate).getTime()
+      return sum + (end - start) / (1000 * 60) // Convert to minutes
+    }, 0)
+
+    return {
+      optimizedSchedule,
+      totalDistance,
+      totalTravelTime,
+      totalDuration,
+    }
+  }
+
+  // Get map locations for schedule
+  async getScheduleMapLocations(scheduleItems: any[]): Promise<any> {
+    await this.delay(500)
+
+    // Mock: Return locations for map visualization
+    return scheduleItems.map((item, index) => ({
+      id: item.id,
+      order: item.order,
+      latitude: item.meeting.latitude || 55.7558 + (Math.random() - 0.5) * 0.1,
+      longitude: item.meeting.longitude || 37.6176 + (Math.random() - 0.5) * 0.1,
+      address: item.meeting.address,
+      title: item.meeting.title,
+      type: 'meeting',
+    }))
   }
 
   // Mock data generators

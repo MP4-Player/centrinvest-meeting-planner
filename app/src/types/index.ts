@@ -184,3 +184,56 @@ export interface ClientFilters {
   status?: string
   search?: string
 }
+
+// Meeting Type Enum
+export type MeetingType =
+  | 'work_meeting'      // Рабочие совещания
+  | 'partner_meeting'   // Встречи с партнерами
+  | 'client_meeting'    // Встречи с клиентами
+  | 'briefing'          // Брифинг
+  | 'product_presentation' // Презентация продукта
+  | 'business_lunch'    // Бизнес ланч
+  | 'other'             // Иное
+
+export interface MeetingTypeCategory {
+  id: MeetingType
+  label: string
+  color: string
+  bgColor: string
+  borderColor: string
+  duration?: number // Продолжительность в минутах
+  isCustom?: boolean // Пользовательская категория
+}
+
+// Extended Meeting with type
+export interface MeetingWithType extends Meeting {
+  meetingType?: MeetingType
+  order?: number // Порядок в расписании
+}
+
+// Schedule item for route optimization
+export interface ScheduleItem {
+  id: string
+  meetingId: string
+  meeting: MeetingWithType
+  order: number
+  estimatedTravelTime?: number // в минутах
+  distance?: number // в метрах
+}
+
+// Route optimization request/response
+export interface RouteOptimizationRequest {
+  meetingIds: string[]
+  startLocation?: {
+    latitude: number
+    longitude: number
+    address: string
+  }
+}
+
+export interface RouteOptimizationResponse {
+  optimizedSchedule: ScheduleItem[]
+  totalDistance: number // в метрах
+  totalTravelTime: number // в минутах
+  totalDuration: number // в минутах (включая время встреч)
+}

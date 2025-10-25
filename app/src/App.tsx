@@ -5,7 +5,8 @@ import { LandingPage } from '@/pages/LandingPage'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { RegisterForm } from '@/components/auth/RegisterForm'
 import { MapPage } from '@/pages/dashboard/MapPage'
-import { MeetingsPage } from '@/pages/dashboard/MeetingsPage'
+import { MeetingTypesPage } from '@/pages/dashboard/MeetingTypesPage'
+import { SchedulePage } from '@/pages/dashboard/SchedulePage'
 import { StatisticsPage } from '@/pages/dashboard/StatisticsPage'
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
 
@@ -83,25 +84,35 @@ function App() {
             </ProtectedRoute>
           } 
         />
-        <Route 
-          path="/dashboard/meetings" 
+        <Route
+          path="/dashboard/meeting-types"
           element={
             <ProtectedRoute>
               <Layout>
-                <MeetingsPage />
+                <MeetingTypesPage />
               </Layout>
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/dashboard/statistics" 
+        <Route
+          path="/dashboard/schedule"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <SchedulePage />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/statistics"
           element={
             <ProtectedRoute>
               <Layout>
                 <StatisticsPage />
               </Layout>
             </ProtectedRoute>
-          } 
+          }
         />
 
         {/* Catch all route */}

@@ -13,12 +13,15 @@ import {
   ChevronLeft,
   ChevronRight,
   Building2,
-  X
+  X,
+  Grid3x3,
+  ClipboardList
 } from 'lucide-react'
 
 const navigation = [
   { name: 'Карта', href: '/dashboard/map', icon: MapPin },
-  { name: 'Встречи', href: '/dashboard/meetings', icon: Calendar },
+  { name: 'Типы встреч', href: '/dashboard/meeting-types', icon: Grid3x3 },
+  { name: 'Расписание', href: '/dashboard/schedule', icon: ClipboardList },
   { name: 'Статистика', href: '/dashboard/statistics', icon: BarChart3 },
 ]
 
