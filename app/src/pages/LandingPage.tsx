@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import { 
   MapPin, 
   Calendar, 
-  Users, 
   CheckSquare, 
   BarChart3, 
   Shield,
@@ -36,25 +35,18 @@ export const LandingPage = () => {
       animation: 'pulse-slow'
     },
     {
-      icon: <Users className="h-12 w-12 text-secondary-600" />,
-      title: 'База клиентов',
-      description: 'Ведите полную базу клиентов с приоритизацией и историей взаимодействий',
-      gradient: 'from-secondary-400 to-secondary-600',
-      animation: 'bounce-slow'
-    },
-    {
       icon: <CheckSquare className="h-12 w-12 text-primary-600" />,
       title: 'Управление задачами',
       description: 'Создавайте, назначайте и отслеживайте выполнение задач',
       gradient: 'from-primary-400 to-accent-500',
-      animation: 'spin-slow'
+      animation: ''
     },
     {
       icon: <BarChart3 className="h-12 w-12 text-accent-600" />,
       title: 'Детальная отчетность',
-      description: 'Получайте подробную аналитику по встречам, задачам и эффективности',
+      description: 'Получайте подробную статистику по встречам, задачам и эффективности',
       gradient: 'from-accent-400 to-primary-500',
-      animation: 'star-twinkle'
+      animation: ''
     },
     {
       icon: <Shield className="h-12 w-12 text-secondary-600" />,
@@ -75,9 +67,16 @@ export const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <h1 className="text-3xl font-display font-bold text-gradient">ЦентрИнвест</h1>
-                <p className="text-sm text-text-secondary">Управление встречами</p>
+              <div className="flex-shrink-0 flex items-center space-x-3">
+                <img 
+                  src="/src/assets/images/logo.png" 
+                  alt="ЦентрИнвест" 
+                  className="h-10 w-10 object-contain"
+                />
+                <div>
+                  <h1 className="text-3xl font-display font-bold text-gradient">ЦентрИнвест</h1>
+                  <p className="text-sm text-text-secondary">Управление встречами</p>
+                </div>
               </div>
             </div>
             
@@ -166,7 +165,7 @@ export const LandingPage = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   to="/register"
-                  className="btn-primary bg-white text-primary-600 hover:bg-gray-100 text-center group"
+                  className="bg-white text-primary-600 hover:bg-gray-100 font-medium py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-center group"
                 >
                   <Zap className="inline-block mr-2 h-5 w-5 group-hover:animate-pulse" />
                   Создать аккаунт
@@ -174,7 +173,7 @@ export const LandingPage = () => {
                 </Link>
                 <a
                   href="#features"
-                  className="btn-secondary glass-effect border-2 border-white/30 text-white hover:bg-white/20 hover:text-white text-center group"
+                  className="bg-white/20 backdrop-blur-md border-2 border-white/50 text-white hover:bg-white/30 hover:text-white font-medium py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-center group"
                 >
                   <Target className="inline-block mr-2 h-5 w-5 group-hover:animate-spin" />
                   Подробнее о функциях
@@ -236,7 +235,7 @@ export const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="relative z-10 py-24 bg-gradient-to-b from-white to-surface">
+      <section id="features" className="relative z-10 py-24 bg-gradient-to-b from-surface to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="inline-flex items-center space-x-2 text-primary-600 mb-4">
@@ -246,7 +245,7 @@ export const LandingPage = () => {
             <h2 className="text-4xl md:text-6xl font-display font-bold text-gradient mb-6">
               Наши возможности
             </h2>
-            <p className="text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
               Комплексное решение для управления встречами, клиентами и задачами
             </p>
           </div>
@@ -255,21 +254,32 @@ export const LandingPage = () => {
             {features.map((feature, index) => (
               <div 
                 key={index} 
-                className={`card card-hover p-8 group animate-on-scroll`}
+                className={`card card-hover p-8 group border-2 border-gray-200`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className={`mb-6 p-4 rounded-2xl bg-gradient-to-br ${feature.gradient} text-white ${feature.animation}`}>
+                <div className={`mb-6 p-4 rounded-2xl bg-gradient-to-br ${feature.gradient} text-white ${feature.animation} relative overflow-hidden`}>
                   {feature.icon}
+                  {/* Декоративные элементы */}
+                  <div className="absolute top-2 right-2 w-8 h-8 bg-white/20 rounded-full animate-pulse"></div>
+                  <div className="absolute bottom-2 left-2 w-4 h-4 bg-white/30 rounded-full animate-bounce-slow"></div>
                 </div>
-                <h3 className="text-2xl font-semibold text-text-primary mb-4 group-hover:text-primary-600 transition-colors">
+                <h3 className={`text-2xl font-semibold mb-4 transition-colors ${
+                  feature.title === 'Детальная отчетность' 
+                    ? 'text-gray-700 group-hover:text-gray-800' 
+                    : 'text-gray-800 group-hover:text-primary-700'
+                }`}>
                   {feature.title}
                 </h3>
-                <p className="text-text-secondary leading-relaxed">
+                <p className={`leading-relaxed ${
+                  feature.title === 'Детальная отчетность' 
+                    ? 'text-gray-600' 
+                    : 'text-gray-700'
+                }`}>
                   {feature.description}
                 </p>
                 <div className="mt-6 flex items-center text-primary-600 font-medium group-hover:translate-x-2 transition-transform">
-                  <span>Узнать больше</span>
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <span> </span>
+                 
                 </div>
               </div>
             ))}
@@ -301,107 +311,139 @@ export const LandingPage = () => {
           {/* Дополнительные функции */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="card p-6 text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl font-bold text-white">%</span>
+              <div className="w-16 h-16 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 overflow-hidden">
+                <img 
+                  src="/src/assets/images/analytics-meetings.jpg" 
+                  alt="Статистика встреч"
+                  className="w-full h-full object-cover rounded-2xl"
+                />
               </div>
-              <h3 className="text-xl font-semibold text-text-primary mb-2">Аналитика встреч</h3>
-              <p className="text-text-secondary">Детальная статистика по встречам</p>
+              <h3 className="text-xl font-semibold text-text-primary mb-2">Статистика встреч</h3>
+              <p className="text-text-secondary">Сохранение историй ваших встреч</p>
             </div>
             
             <div className="card p-6 text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-accent-400 to-accent-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl font-bold text-white">%</span>
-              </div>
-              <h3 className="text-xl font-semibold text-text-primary mb-2">Управление клиентами</h3>
-              <p className="text-text-secondary">База клиентов и их приоритеты</p>
-            </div>
-            
-            <div className="card p-6 text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-secondary-400 to-secondary-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl font-bold text-white">%</span>
+              <div className="w-16 h-16 bg-gradient-to-br from-secondary-400 to-secondary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 overflow-hidden">
+                <img 
+                  src="/src/assets/images/task-planner.jpg" 
+                  alt="Планировщик задач"
+                  className="w-full h-full object-cover rounded-2xl"
+                />
               </div>
               <h3 className="text-xl font-semibold text-text-primary mb-2">Планировщик задач</h3>
               <p className="text-text-secondary">Создание и отслеживание задач</p>
             </div>
             
             <div className="card p-6 text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary-300 to-accent-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl font-bold text-white">%</span>
+              <div className="w-16 h-16 bg-gradient-to-br from-primary-300 to-accent-500 rounded-2xl flex items-center justify-center mx-auto mb-4 overflow-hidden">
+                <img 
+                  src="/src/assets/images/route-map.jpg" 
+                  alt="Карта маршрутов"
+                  className="w-full h-full object-cover rounded-2xl"
+                />
               </div>
               <h3 className="text-xl font-semibold text-text-primary mb-2">Карта маршрутов</h3>
               <p className="text-text-secondary">Оптимизация маршрутов встреч</p>
-            </div>
-            
-            <div className="card p-6 text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-accent-300 to-primary-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl font-bold text-white">%</span>
-              </div>
-              <h3 className="text-xl font-semibold text-text-primary mb-2">Отчеты и аналитика</h3>
-              <p className="text-text-secondary">Комплексная аналитика работы</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 bg-gradient-to-br from-text-primary to-gray-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="space-y-4">
-              <h3 className="text-2xl font-display font-bold text-gradient">ЦентрИнвест</h3>
-              <p className="text-gray-300 leading-relaxed">
-                Управление встречами и бизнес-процессами нового поколения
-              </p>
-              <div className="flex space-x-4">
-                <div className="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors cursor-pointer">
-                  <span className="text-sm">f</span>
-                </div>
-                <div className="w-10 h-10 bg-accent-500 rounded-full flex items-center justify-center hover:bg-accent-600 transition-colors cursor-pointer">
-                  <span className="text-sm">t</span>
-                </div>
-                <div className="w-10 h-10 bg-secondary-500 rounded-full flex items-center justify-center hover:bg-secondary-600 transition-colors cursor-pointer">
-                  <span className="text-sm">in</span>
-                </div>
-              </div>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-6 text-white">Продукт</h4>
-              <ul className="space-y-3">
-                <li><a href="#features" className="text-gray-300 hover:text-accent-400 transition-colors">Возможности</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-accent-400 transition-colors">Цены</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-accent-400 transition-colors">API</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-accent-400 transition-colors">Интеграции</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-6 text-white">Поддержка</h4>
-              <ul className="space-y-3">
-                <li><a href="#" className="text-gray-300 hover:text-accent-400 transition-colors">Помощь</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-accent-400 transition-colors">Документация</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-accent-400 transition-colors">Контакты</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-accent-400 transition-colors">Сообщество</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-6 text-white">Правовая информация</h4>
-              <ul className="space-y-3">
-                <li><a href="#" className="text-gray-300 hover:text-accent-400 transition-colors">Политика конфиденциальности</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-accent-400 transition-colors">Условия использования</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-accent-400 transition-colors">Лицензия</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-accent-400 transition-colors">GDPR</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400">&copy; 2023 ЦентрИнвест. Все права защищены.</p>
-            <div className="flex items-center space-x-2 mt-4 md:mt-0">
-              <span className="text-gray-400">Сделано с</span>
-              <div className="w-4 h-4 text-accent-400 animate-pulse">❤️</div>
-              <span className="text-gray-400">в России</span>
-            </div>
-          </div>
+
+{/* Footer */}
+<footer className="relative z-10 bg-gradient-to-br from-text-primary to-gray-800 text-white">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="space-y-4">
+        <h3 className="text-2xl font-display font-bold text-gradient">ЦентрИнвест</h3>
+        <p className="text-gray-300 leading-relaxed">
+          Управление встречами и бизнес-процессами нового поколения
+        </p>
+        <div className="mb-4">
         </div>
-      </footer>
+      </div>
+      
+      <div>
+        <h4 className="text-lg font-semibold mb-6 text-white">Продукт</h4>
+        <ul className="space-y-3">
+          <li><a href="#features" className="text-gray-300 hover:text-accent-400 transition-colors">Возможности</a></li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4 className="text-lg font-semibold mb-6 text-white">Поддержка</h4>
+        <ul className="space-y-3">
+          <li><a href="#" className="text-gray-300 hover:text-accent-400 transition-colors">Помощь</a></li>
+          <p className="text-white font-semibold">8 800 200 99 29</p>
+          <li><a href="#" className="text-gray-300 hover:text-accent-400 transition-colors">Контакты</a></li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4 className="text-lg font-semibold mb-6 text-white">Следить за нами</h4>
+        <div className="flex space-x-4 mb-6">
+          {/* ВКонтакте */}
+          <a 
+            href="https://vk.com/center-invest" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-10 h-10 bg-[#0077FF] rounded-full flex items-center justify-center hover:bg-[#0066DD] transition-colors cursor-pointer"
+            title="ВКонтакте"
+          >
+            <img 
+              src="/src/assets/images/vk.png" 
+              alt="VK" 
+              className="w-5 h-5"
+            />
+          </a>
+          
+          {/* Одноклассники */}
+          <a 
+            href="https://ok.ru/center-invest" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-10 h-10 bg-[#EE8208] rounded-full flex items-center justify-center hover:bg-[#D67307] transition-colors cursor-pointer"
+            title="Одноклассники"
+          >
+            <img 
+              src="/src/assets/images/ok.png" 
+              alt="OK" 
+              className="w-5 h-5 "
+            />
+          </a>
+          
+          {/* YouTube */}
+          <a 
+            href="https://youtube.com/center-invest" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-10 h-10 bg-[#FF0000] rounded-full flex items-center justify-center hover:bg-[#DD0000] transition-colors cursor-pointer"
+            title="YouTube"
+          >
+            <img 
+              src="/src/assets/images/yt.png" 
+              alt="YouTube" 
+              className="w-5 h-5 "
+            />
+          </a>
+        </div>
+        
+        <p className="text-gray-300 text-sm mb-2">Будьте в курсе новостей</p>
+        <p className="text-gray-400 text-xs">Подпишитесь на наши соцсети</p>
+      </div>
+    </div>
+    
+    <div className="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+      <p className="text-gray-400">&copy; 2025 ЦентрИнвест. Все права защищены.</p>
+      <div className="flex items-center space-x-2 mt-4 md:mt-0">
+        <span className="text-gray-400">Сделано с</span>
+        <div className="w-4 h-4 text-accent-400 animate-pulse">❤️</div>
+        <span className="text-gray-400">в России</span>
+      </div>
+    </div>
+  </div>
+</footer>
     </div>
   )
 }

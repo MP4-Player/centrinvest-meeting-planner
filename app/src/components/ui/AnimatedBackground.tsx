@@ -85,9 +85,9 @@ export const AnimatedBackground = () => {
         const distance = Math.sqrt(dx * dx + dy * dy)
         
         // Отталкивание от курсора (чем ближе курсор, тем дальше звезда)
-        const repelStrength = Math.max(0, 30 - distance) / 30
-        const repelX = dx / Math.max(distance, 1) * repelStrength * 20
-        const repelY = dy / Math.max(distance, 1) * repelStrength * 20
+        const repelStrength = Math.max(0, 40 - distance) / 40
+        const repelX = dx / Math.max(distance, 1) * repelStrength * 15
+        const repelY = dy / Math.max(distance, 1) * repelStrength * 15
         
         const finalX = star.baseX + repelX
         const finalY = star.baseY + repelY
@@ -95,16 +95,17 @@ export const AnimatedBackground = () => {
         return (
           <div
             key={star.id}
-            className="absolute text-white/40 font-bold select-none"
+            className="absolute text-white/70 font-bold select-none"
             style={{
               left: `${Math.max(0, Math.min(100, finalX))}%`,
               top: `${Math.max(0, Math.min(100, finalY))}%`,
               fontSize: `${star.size}rem`,
               opacity: star.opacity,
-              animation: `float 6s ease-in-out infinite`,
+              animation: `float 8s ease-in-out infinite`,
               animationDelay: `${star.animationDelay}s`,
-              transition: 'all 0.8s ease-out',
+              transition: 'all 1.2s ease-out',
               zIndex: 2,
+              textShadow: '0 0 10px rgba(255,255,255,0.3)',
             }}
           >
             %

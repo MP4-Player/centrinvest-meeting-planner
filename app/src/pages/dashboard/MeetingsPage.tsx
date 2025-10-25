@@ -44,11 +44,11 @@ export const MeetingsPage = () => {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-4 md:p-6">
       <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold text-gray-900">Встречи</h1>
-          <button className="btn-primary flex items-center">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-4 sm:space-y-0">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Встречи</h1>
+          <button className="btn-primary flex items-center justify-center">
             <Plus className="h-4 w-4 mr-2" />
             Добавить встречу
           </button>
@@ -83,7 +83,7 @@ export const MeetingsPage = () => {
 
       {/* Filters and Search */}
       <div className="mb-6">
-        <div className="flex items-center space-x-4 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
@@ -96,7 +96,7 @@ export const MeetingsPage = () => {
           </div>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="btn-secondary flex items-center"
+            className="btn-secondary flex items-center justify-center"
           >
             <Filter className="h-4 w-4 mr-2" />
             Фильтры
@@ -163,8 +163,8 @@ export const MeetingsPage = () => {
         )}
       </div>
 
-      {/* Meetings Table */}
-      <div className="card">
+      {/* Meetings - Desktop Table View */}
+      <div className="hidden md:block card">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -270,6 +270,81 @@ export const MeetingsPage = () => {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Meetings - Mobile Card View */}
+      <div className="md:hidden space-y-4">
+        {isLoading ? (
+          <div className="card p-6 text-center text-gray-500">
+            Загрузка...
+          </div>
+        ) : meetingsData?.data.length === 0 ? (
+          <div className="card p-6 text-center text-gray-500">
+            Встречи не найдены
+          </div>
+        ) : (
+          meetingsData?.data.map((meeting) => (
+            <div key={meeting.id} className="card p-4">
+              <div className="space-y-3">
+                {/* Title and Status */}
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h3 className="text-sm font-semibold text-gray-900">{meeting.title}</h3>
+                    <p className="text-xs text-gray-500 mt-1">{meeting.description}</p>
+                  </div>
+                  <div className="ml-2">
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(meeting.status)}`}>
+                      {meeting.status === 'scheduled' && 'Запланирована'}
+                      {meeting.status === 'completed' && 'Завершена'}
+                      {meeting.status === 'cancelled' && 'Отменена'}
+                      {meeting.status === 'postponed' && 'Отложена'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Client */}
+                <div className="flex items-center">
+                  <User className="h-4 w-4 text-gray-400 mr-2" />
+                  <span className="text-sm text-gray-900">{meeting.clientName}</span>
+                  <span className={`ml-auto inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getPriorityColor(meeting.priority)}`}>
+                    {meeting.priority === 'vip' ? 'VIP' : 'Стандарт'}
+                  </span>
+                </div>
+
+                {/* Time */}
+                <div className="space-y-1">
+                  <div className="flex items-center text-sm text-gray-900">
+                    <Calendar className="h-4 w-4 text-gray-400 mr-2" />
+                    <span>{formatDate(meeting.startDate)}</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Clock className="h-4 w-4 text-gray-400 mr-2" />
+                    <span>{formatDate(meeting.endDate)}</span>
+                  </div>
+                </div>
+
+                {/* Location */}
+                <div className="space-y-1">
+                  <div className="flex items-center text-sm text-gray-900">
+                    <MapPin className="h-4 w-4 text-gray-400 mr-2" />
+                    <span>{meeting.location}</span>
+                  </div>
+                  <div className="text-sm text-gray-500 ml-6">{meeting.address}</div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center space-x-4 pt-2 border-t border-gray-200">
+                  <button className="flex-1 text-center text-sm text-primary-600 hover:text-primary-900 font-medium">
+                    Редактировать
+                  </button>
+                  <button className="flex-1 text-center text-sm text-red-600 hover:text-red-900 font-medium">
+                    Удалить
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   )

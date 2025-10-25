@@ -13,43 +13,31 @@ export const Kaleidoscope = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
 
-  // Мок-изображения для калейдоскопа (без реальных изображений)
+  // Изображения для калейдоскопа
   const images: DashboardImage[] = [
     {
       id: '1',
-      src: '', // Пустая строка - изображение не загружается
-      title: 'Аналитика встреч',
+      src: '/src/assets/images/analytics-meetings.jpg',
+      title: 'Статистика встреч',
       description: 'Детальная статистика по встречам',
       color: 'from-primary-400 to-primary-600'
     },
+    
     {
       id: '2',
-      src: '',
-      title: 'Управление клиентами',
-      description: 'База клиентов и их приоритеты',
-      color: 'from-accent-400 to-accent-600'
-    },
-    {
-      id: '3',
-      src: '',
+      src: '/src/assets/images/task-planner.jpg',
       title: 'Планировщик задач',
       description: 'Создание и отслеживание задач',
       color: 'from-secondary-400 to-secondary-600'
     },
     {
-      id: '4',
-      src: '',
+      id: '3',
+      src: '/src/assets/images/route-map.jpg',
       title: 'Карта маршрутов',
       description: 'Оптимизация маршрутов встреч',
       color: 'from-primary-300 to-accent-500'
     },
-    {
-      id: '5',
-      src: '',
-      title: 'Отчеты и аналитика',
-      description: 'Комплексная аналитика работы',
-      color: 'from-accent-300 to-primary-500'
-    }
+    
   ]
 
   useEffect(() => {
@@ -88,14 +76,18 @@ export const Kaleidoscope = () => {
             filter: 'blur(0px)',
           }}
         >
-          {/* Заглушка изображения */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center text-white">
-              <div className="w-32 h-32 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center">
-                <span className="text-6xl font-bold text-white/80">%</span>
+          {/* Изображение */}
+          <div className="absolute inset-0">
+            <img 
+              src={images[currentIndex].src} 
+              alt={images[currentIndex].title}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+              <div className="text-center text-white">
+                <h3 className="text-2xl font-bold mb-2">{images[currentIndex].title}</h3>
+                <p className="text-lg opacity-90">{images[currentIndex].description}</p>
               </div>
-              <h3 className="text-2xl font-bold mb-2">{images[currentIndex].title}</h3>
-              <p className="text-lg opacity-90">{images[currentIndex].description}</p>
             </div>
           </div>
         </div>

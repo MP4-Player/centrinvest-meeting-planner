@@ -6,8 +6,6 @@ import { LoginForm } from '@/components/auth/LoginForm'
 import { RegisterForm } from '@/components/auth/RegisterForm'
 import { MapPage } from '@/pages/dashboard/MapPage'
 import { MeetingsPage } from '@/pages/dashboard/MeetingsPage'
-import { ClientsPage } from '@/pages/dashboard/ClientsPage'
-import { TasksPage } from '@/pages/dashboard/TasksPage'
 import { StatisticsPage } from '@/pages/dashboard/StatisticsPage'
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
 
@@ -91,26 +89,6 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <MeetingsPage />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/dashboard/clients" 
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <ClientsPage />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/dashboard/tasks" 
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <TasksPage />
               </Layout>
             </ProtectedRoute>
           } 
