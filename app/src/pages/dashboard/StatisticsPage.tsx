@@ -25,11 +25,13 @@ export const StatisticsPage = () => {
     vipClients: 0,
     standardClients: 0,
   })
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const loadStatistics = async () => {
       try {
-        const data = await apiService.get('/statistics')
+        setLoading(true)
+        const data = await apiService.getStatistics()
         setStats(data)
       } catch (error) {
         console.error('Error loading statistics:', error)
@@ -46,14 +48,27 @@ export const StatisticsPage = () => {
           vipClients: 12,
           standardClients: 33,
         })
+      } finally {
+        setLoading(false)
       }
     }
 
     loadStatistics()
-  }, [])
+  }, [timeRange])
 
-  const completionRate = Math.round((stats.completedMeetings / stats.totalMeetings) * 100)
-  const taskCompletionRate = Math.round((stats.completedTasks / stats.totalTasks) * 100)
+  const completionRate = stats.totalMeetings > 0 ? Math.round((stats.completedMeetings / stats.totalMeetings) * 100) : 0
+  const taskCompletionRate = stats.totalTasks > 0 ? Math.round((stats.completedTasks / stats.totalTasks) * 100) : 0
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Загрузка статистики...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="p-4 md:p-6">

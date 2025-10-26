@@ -1,17 +1,25 @@
 import { useState } from 'react'
 import { Plus, Search, Filter, Mail, Phone, MapPin, User, Building } from 'lucide-react'
-import { useClients } from '@/hooks/useClients'
-import { ClientFilters } from '@/types'
+import { useClients, useCreateClient, useUpdateClient, useDeleteClient } from '@/hooks/useClients'
+import { ClientFilters, Client, CreateClientData } from '@/types'
+import { ClientFormModal } from '@/components/clients/ClientFormModal'
 
 export const ClientsPage = () => {
   const [filters, setFilters] = useState<ClientFilters>({})
   const [searchQuery, setSearchQuery] = useState('')
   const [showFilters, setShowFilters] = useState(false)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [editingClient, setEditingClient] = useState<Client | undefined>(undefined)
 
   const { data: clientsData, isLoading } = useClients({
     ...filters,
     search: searchQuery || undefined,
   })
+  
+  const createClientMutation = useCreateClient()
+  const updateClientMutation = useUpdateClient()
+  const deleteClientMutation = useDeleteClient()
 
   const getPriorityColor = (priority: string) => {
     return priority === 'vip' 
@@ -25,12 +33,55 @@ export const ClientsPage = () => {
       : 'bg-red-100 text-red-800'
   }
 
+  const handleCreateClient = () => {
+    setIsCreateModalOpen(true)
+  }
+
+  const handleEditClient = (clientId: string) => {
+    const client = clientsData?.data.find((c) => c.id === clientId)
+    if (client) {
+      setEditingClient(client)
+      setIsEditModalOpen(true)
+    }
+  }
+
+  const handleSaveClient = async (clientData: CreateClientData) => {
+    try {
+      await createClientMutation.mutateAsync(clientData)
+    } catch (error) {
+      console.error('Error creating client:', error)
+    }
+  }
+
+  const handleUpdateClient = async (clientData: CreateClientData) => {
+    if (editingClient) {
+      try {
+        await updateClientMutation.mutateAsync({ id: editingClient.id, client: clientData })
+      } catch (error) {
+        console.error('Error updating client:', error)
+      }
+    }
+  }
+
+  const handleDeleteClient = async (clientId: string) => {
+    if (window.confirm('Вы уверены, что хотите удалить этого клиента?')) {
+      try {
+        await deleteClientMutation.mutateAsync(clientId)
+      } catch (error) {
+        console.error('Error deleting client:', error)
+      }
+    }
+  }
+
   return (
     <div className="p-6">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold text-gray-900">Клиенты</h1>
-          <button className="btn-primary flex items-center">
+          <button 
+            className="btn-primary flex items-center"
+            onClick={handleCreateClient}
+          >
             <Plus className="h-4 w-4 mr-2" />
             Добавить клиента
           </button>
@@ -192,10 +243,16 @@ export const ClientsPage = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end space-x-2">
-                        <button className="text-primary-600 hover:text-primary-900">
+                        <button 
+                          className="text-primary-600 hover:text-primary-900"
+                          onClick={() => handleEditClient(client.id)}
+                        >
                           Редактировать
                         </button>
-                        <button className="text-red-600 hover:text-red-900">
+                        <button 
+                          className="text-red-600 hover:text-red-900"
+                          onClick={() => handleDeleteClient(client.id)}
+                        >
                           Удалить
                         </button>
                       </div>
@@ -207,6 +264,26 @@ export const ClientsPage = () => {
           </table>
         </div>
       </div>
+
+      {/* Create Client Modal */}
+      <ClientFormModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSave={handleSaveClient}
+        mode="create"
+      />
+
+      {/* Edit Client Modal */}
+      <ClientFormModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false)
+          setEditingClient(undefined)
+        }}
+        onSave={handleUpdateClient}
+        client={editingClient}
+        mode="edit"
+      />
     </div>
   )
 }

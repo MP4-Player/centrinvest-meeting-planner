@@ -20,7 +20,7 @@ http://localhost:5173
 
 ### 3. Войдите в систему
 - **Email:** `admin@example.com`
-- **Password:** `Admin`
+- **Password:** `Admin1`
 
 ### 4. Перейдите в раздел "Встречи"
 Вы увидите 2 новые вкладки:
@@ -291,7 +291,7 @@ http://localhost:5173
 
 **Запустите:** `npm run dev`
 **Откройте:** `http://localhost:5173`
-**Войдите:** `admin@example.com` / `Admin`
+**Войдите:** `admin@example.com` / `Admin1`
 
 ---
 

@@ -6,26 +6,26 @@ import toast from 'react-hot-toast'
 export const useClients = (filters?: ClientFilters, page = 1, limit = 10) => {
   return useQuery({
     queryKey: ['clients', filters, page, limit],
-    queryFn: () => apiService.get('/clients', { ...filters, page, limit }),
+    queryFn: () => apiService.getClients(filters, page, limit),
   })
 }
 
 export const useClient = (id: string) => {
   return useQuery({
     queryKey: ['client', id],
-    queryFn: () => apiService.get(`/clients/${id}`),
+    queryFn: () => apiService.getClient(id),
     enabled: !!id,
   })
 }
 
 export const useCreateClient = () => {
   const queryClient = useQueryClient()
-
+  
   return useMutation({
-    mutationFn: (data: CreateClientData) => apiService.post('/clients', data),
+    mutationFn: (client: CreateClientData) => apiService.createClient(client),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clients'] })
-      toast.success('Клиент создан успешно!')
+      toast.success('Клиент создан успешно')
     },
     onError: (error: any) => {
       toast.error(error.message || 'Ошибка создания клиента')
@@ -35,14 +35,13 @@ export const useCreateClient = () => {
 
 export const useUpdateClient = () => {
   const queryClient = useQueryClient()
-
+  
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<CreateClientData> }) =>
-      apiService.put(`/clients/${id}`, data),
-    onSuccess: (_, { id }) => {
+    mutationFn: ({ id, client }: { id: string; client: CreateClientData }) => 
+      apiService.updateClient(id, client),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clients'] })
-      queryClient.invalidateQueries({ queryKey: ['client', id] })
-      toast.success('Клиент обновлен успешно!')
+      toast.success('Клиент обновлен успешно')
     },
     onError: (error: any) => {
       toast.error(error.message || 'Ошибка обновления клиента')
@@ -54,10 +53,10 @@ export const useDeleteClient = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: string) => apiService.delete(`/clients/${id}`),
+    mutationFn: (id: string) => apiService.deleteClient(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clients'] })
-      toast.success('Клиент удален успешно!')
+      toast.success('Клиент удален успешно')
     },
     onError: (error: any) => {
       toast.error(error.message || 'Ошибка удаления клиента')

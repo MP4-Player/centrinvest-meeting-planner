@@ -130,7 +130,7 @@ http://localhost:5173
 
 ### Тестовые данные:
 - Login: `admin@example.com`
-- Password: `Admin`
+- Password: `Admin1`
 
 ## 🎨 Особенности дизайна
 

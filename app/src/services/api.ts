@@ -1,185 +1,212 @@
-import { AuthResponse, LoginCredentials, RegisterData } from '@/types'
+import { AuthResponse, LoginCredentials, RegisterData, Meeting, CreateMeetingData, Client, CreateClientData, Task, CreateTaskData, Statistics, RouteOptimizationRequest, RouteOptimizationResponse } from '@/types'
+import { MockStorageService } from './mockStorage'
 
-// Mock API Service for development
+// API configuration - using mock storage instead of backend
+const USE_MOCK = true // Set to false when backend is ready
+
 class ApiService {
-  private delay(ms: number = 500): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms))
-  }
-
   // Auth methods
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    // Check for admin user
-    if (credentials.email === 'admin@example.com' && credentials.password === 'Admin1') {
-      const adminUser = {
-        id: 'admin-1',
-        email: 'admin@example.com',
-        firstName: 'Admin',
-        lastName: 'User',
-        role: 'admin'
-      }
-      
-      return {
-        token: 'mock-admin-token-' + Date.now(),
-        user: adminUser
-      }
+    if (USE_MOCK) {
+      return MockStorageService.login(credentials)
     }
-    
-    // Check for existing users in localStorage
-    const existingUsers = JSON.parse(localStorage.getItem('mockUsers') || '[]')
-    const user = existingUsers.find((u: any) => 
-      u.email === credentials.email && u.password === credentials.password
-    )
-    
-    if (!user) {
-      throw new Error('Неверные учетные данные')
-    }
-    
-    return {
-      token: 'mock-token-' + Date.now(),
-      user: {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role
-      }
-    }
+    // Backend implementation here when ready
+    throw new Error('Backend not implemented')
   }
 
   async register(data: RegisterData): Promise<AuthResponse> {
-    // Check if user already exists
-    const existingUsers = JSON.parse(localStorage.getItem('mockUsers') || '[]')
-    const existingUser = existingUsers.find((u: any) => u.email === data.email)
-    
-    if (existingUser) {
-      throw new Error('Пользователь с таким email уже существует')
+    if (USE_MOCK) {
+      return MockStorageService.register(data)
     }
-    
-    // Create new user
-    const newUser = {
-      id: 'user-' + Date.now(),
-      email: data.email,
-      password: data.password,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      role: 'user'
-    }
-    
-    existingUsers.push(newUser)
-    localStorage.setItem('mockUsers', JSON.stringify(existingUsers))
-    
-    return {
-      token: 'mock-token-' + Date.now(),
-      user: {
-        id: newUser.id,
-        email: newUser.email,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-        role: newUser.role
-      }
-    }
+    // Backend implementation here when ready
+    throw new Error('Backend not implemented')
   }
 
   async logout(): Promise<void> {
-    // Mock logout - no server call needed
-  }
-
-  // Generic CRUD methods (mock implementations)
-  async get<T>(endpoint: string, params?: Record<string, any>): Promise<T> {
-    // Mock data based on endpoint
-    if (endpoint.includes('/meetings')) {
-      return this.getMockMeetings(params) as T
-    } else if (endpoint.includes('/clients')) {
-      return this.getMockClients(params) as T
-    } else if (endpoint.includes('/tasks')) {
-      return this.getMockTasks(params) as T
-    } else if (endpoint.includes('/map/locations')) {
-      return this.getMockMapLocations() as T
-    } else if (endpoint.includes('/statistics')) {
-      return this.getMockStatistics() as T
+    if (USE_MOCK) {
+      return MockStorageService.logout()
     }
-    
-    throw new Error('Endpoint not implemented')
+    // Backend implementation here when ready
   }
 
-  async post<T>(endpoint: string, data?: any): Promise<T> {
-    if (endpoint.includes('/meetings')) {
-      return this.createMockMeeting(data) as T
-    } else if (endpoint.includes('/clients')) {
-      return this.createMockClient(data) as T
-    } else if (endpoint.includes('/tasks')) {
-      return this.createMockTask(data) as T
+  // Meetings methods
+  async getMeetings(filters?: any, page = 1, limit = 10): Promise<{ data: Meeting[] }> {
+    if (USE_MOCK) {
+      const meetings = await MockStorageService.getMeetings(filters)
+      return { data: meetings }
     }
-    
-    throw new Error('Endpoint not implemented')
+    // Backend implementation here when ready
+    throw new Error('Backend not implemented')
   }
 
-  async put<T>(endpoint: string, data?: any): Promise<T> {
-    // Mock update - return the data as if it was updated
-    return data as T
+  async getMeeting(id: string): Promise<Meeting> {
+    if (USE_MOCK) {
+      return MockStorageService.getMeeting(id)
+    }
+    // Backend implementation here when ready
+    throw new Error('Backend not implemented')
   }
 
-  async delete<T>(endpoint: string): Promise<T> {
-    // Mock delete - return success
-    return { success: true } as T
+  async createMeeting(meeting: CreateMeetingData): Promise<Meeting> {
+    if (USE_MOCK) {
+      return MockStorageService.createMeeting(meeting)
+    }
+    // Backend implementation here when ready
+    throw new Error('Backend not implemented')
   }
 
-  // Route optimization endpoint
-  async optimizeRoute(meetingIds: string[], startLocation?: {
-    latitude: number
-    longitude: number
-    address: string
-  }): Promise<any> {
-    await this.delay(1500) // Simulate API call
+  async updateMeeting(id: string, meeting: CreateMeetingData): Promise<Meeting> {
+    if (USE_MOCK) {
+      return MockStorageService.updateMeeting(id, meeting)
+    }
+    // Backend implementation here when ready
+    throw new Error('Backend not implemented')
+  }
 
-    // Mock route optimization logic
-    // In real implementation, this would call a backend service that uses
-    // a routing algorithm (e.g., Google Maps API, OSRM, etc.)
+  async deleteMeeting(id: string): Promise<void> {
+    if (USE_MOCK) {
+      return MockStorageService.deleteMeeting(id)
+    }
+    // Backend implementation here when ready
+  }
 
-    const meetings = meetingIds.map(id => {
-      // Find meeting from mock data
-      const mockMeetings = this.getMockMeetings({})
-      const meeting = mockMeetings.data.find((m: any) => m.id === id)
-      return meeting
-    }).filter(Boolean)
+  // Clients methods
+  async getClients(filters?: any, page = 1, limit = 10): Promise<{ data: Client[] }> {
+    if (USE_MOCK) {
+      const clients = await MockStorageService.getClients(filters)
+      return { data: clients }
+    }
+    // Backend implementation here when ready
+    throw new Error('Backend not implemented')
+  }
 
-    // Simple optimization: sort by location (in reality would use proper routing)
-    const optimizedSchedule = meetings.map((meeting: any, index: number) => ({
-      id: `schedule-${meeting.id}`,
-      meetingId: meeting.id,
-      meeting,
-      order: index + 1,
-      estimatedTravelTime: Math.floor(Math.random() * 30) + 10, // Mock: 10-40 min
-      distance: Math.floor(Math.random() * 10000) + 1000, // Mock: 1-11 km
-    }))
+  async getClient(id: string): Promise<Client> {
+    if (USE_MOCK) {
+      return MockStorageService.getClient(id)
+    }
+    // Backend implementation here when ready
+    throw new Error('Backend not implemented')
+  }
 
-    const totalDistance = optimizedSchedule.reduce((sum: number, item: any) =>
-      sum + (item.distance || 0), 0
-    )
-    const totalTravelTime = optimizedSchedule.reduce((sum: number, item: any) =>
-      sum + (item.estimatedTravelTime || 0), 0
-    )
+  async createClient(client: CreateClientData): Promise<Client> {
+    if (USE_MOCK) {
+      return MockStorageService.createClient(client)
+    }
+    // Backend implementation here when ready
+    throw new Error('Backend not implemented')
+  }
 
-    // Calculate total duration including meeting times
-    const totalDuration = totalTravelTime + meetings.reduce((sum: number, meeting: any) => {
-      const start = new Date(meeting.startDate).getTime()
-      const end = new Date(meeting.endDate).getTime()
-      return sum + (end - start) / (1000 * 60) // Convert to minutes
-    }, 0)
+  async updateClient(id: string, client: CreateClientData): Promise<Client> {
+    if (USE_MOCK) {
+      return MockStorageService.updateClient(id, client)
+    }
+    // Backend implementation here when ready
+    throw new Error('Backend not implemented')
+  }
+
+  async deleteClient(id: string): Promise<void> {
+    if (USE_MOCK) {
+      return MockStorageService.deleteClient(id)
+    }
+    // Backend implementation here when ready
+  }
+
+  // Tasks methods
+  async getTasks(filters?: any, page = 1, limit = 10): Promise<{ data: Task[] }> {
+    if (USE_MOCK) {
+      const tasks = await MockStorageService.getTasks(filters)
+      return { data: tasks }
+    }
+    // Backend implementation here when ready
+    throw new Error('Backend not implemented')
+  }
+
+  async getTask(id: string): Promise<Task> {
+    if (USE_MOCK) {
+      return MockStorageService.getTask(id)
+    }
+    // Backend implementation here when ready
+    throw new Error('Backend not implemented')
+  }
+
+  async createTask(task: CreateTaskData): Promise<Task> {
+    if (USE_MOCK) {
+      return MockStorageService.createTask(task)
+    }
+    // Backend implementation here when ready
+    throw new Error('Backend not implemented')
+  }
+
+  async updateTask(id: string, task: CreateTaskData): Promise<Task> {
+    if (USE_MOCK) {
+      return MockStorageService.updateTask(id, task)
+    }
+    // Backend implementation here when ready
+    throw new Error('Backend not implemented')
+  }
+
+  async deleteTask(id: string): Promise<void> {
+    if (USE_MOCK) {
+      return MockStorageService.deleteTask(id)
+    }
+    // Backend implementation here when ready
+  }
+
+  // Statistics
+  async getStatistics(): Promise<Statistics> {
+    if (USE_MOCK) {
+      return MockStorageService.getStatistics()
+    }
+    // Backend implementation here when ready
+    throw new Error('Backend not implemented')
+  }
+
+  async getMeetingTypes(): Promise<any[]> {
+    // Mock meeting types
+    return [
+      { id: 'work_meeting', label: 'Рабочие совещания', color: '#3B82F6' },
+      { id: 'partner_meeting', label: 'Встречи с партнерами', color: '#10B981' },
+      { id: 'client_meeting', label: 'Встречи с клиентами', color: '#F59E0B' },
+      { id: 'briefing', label: 'Брифинг', color: '#8B5CF6' },
+      { id: 'product_presentation', label: 'Презентация продукта', color: '#EC4899' },
+      { id: 'business_lunch', label: 'Бизнес ланч', color: '#14B8A6' },
+      { id: 'other', label: 'Иное', color: '#6B7280' }
+    ]
+  }
+
+  async createMeetingType(meetingType: any): Promise<any> {
+    // Mock implementation
+    return { ...meetingType, id: `custom-${Date.now()}` }
+  }
+
+  // Route optimization
+  async optimizeRoute(request: RouteOptimizationRequest): Promise<RouteOptimizationResponse> {
+    // Mock implementation - just return the same order with some mock data
+    const meetings = await MockStorageService.getMeetings()
+    const requestedMeetings = meetings.filter(m => request.meetingIds.includes(m.id))
 
     return {
-      optimizedSchedule,
-      totalDistance,
-      totalTravelTime,
-      totalDuration,
+      optimizedSchedule: requestedMeetings.map((meeting, index) => ({
+        id: `schedule-${index}`,
+        meetingId: meeting.id,
+        meeting: meeting as any,
+        order: index + 1,
+        estimatedTravelTime: index > 0 ? 15 : 0,
+        distance: index > 0 ? 5000 : 0
+      })),
+      totalDistance: requestedMeetings.length > 1 ? (requestedMeetings.length - 1) * 5000 : 0,
+      totalTravelTime: requestedMeetings.length > 1 ? (requestedMeetings.length - 1) * 15 : 0,
+      totalDuration: requestedMeetings.reduce((sum, m) => {
+        const start = new Date(m.startDate).getTime()
+        const end = new Date(m.endDate).getTime()
+        return sum + (end - start) / (1000 * 60)
+      }, 0)
     }
   }
 
   // Get map locations for schedule
   async getScheduleMapLocations(scheduleItems: any[]): Promise<any> {
-    await this.delay(500)
-
-    // Mock: Return locations for map visualization
+    // This would typically call a backend endpoint, but for now we'll process locally
     return scheduleItems.map((item, index) => ({
       id: item.id,
       order: item.order,
@@ -189,155 +216,6 @@ class ApiService {
       title: item.meeting.title,
       type: 'meeting',
     }))
-  }
-
-  // Mock data generators
-  private getMockMeetings(params?: any) {
-    const meetings = [
-      {
-        id: '1',
-        title: 'Встреча с клиентом А',
-        description: 'Обсуждение проекта',
-        clientId: '1',
-        clientName: 'ООО Ромашка',
-        employeeId: '1',
-        employeeName: 'Иван Иванов',
-        startDate: new Date().toISOString(),
-        endDate: new Date(Date.now() + 3600000).toISOString(),
-        location: 'Офис клиента',
-        address: 'ул. Ленина, 1',
-        latitude: 55.7558,
-        longitude: 37.6176,
-        status: 'scheduled',
-        priority: 'vip',
-        isRecurring: false,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    ]
-    
-    return {
-      data: meetings,
-      total: meetings.length,
-      page: 1,
-      limit: 10,
-      totalPages: 1
-    }
-  }
-
-  private getMockClients(params?: any) {
-    const clients = [
-      {
-        id: '1',
-        firstName: 'Иван',
-        lastName: 'Петров',
-        email: 'ivan@example.com',
-        phone: '+7 (999) 123-45-67',
-        company: 'ООО Ромашка',
-        position: 'Директор',
-        address: 'ул. Ленина, 1, Москва',
-        latitude: 55.7558,
-        longitude: 37.6176,
-        priority: 'vip',
-        status: 'active',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    ]
-    
-    return {
-      data: clients,
-      total: clients.length,
-      page: 1,
-      limit: 10,
-      totalPages: 1
-    }
-  }
-
-  private getMockTasks(params?: any) {
-    const tasks = [
-      {
-        id: '1',
-        title: 'Подготовить презентацию',
-        description: 'Создать презентацию для клиента',
-        clientId: '1',
-        clientName: 'ООО Ромашка',
-        employeeId: '1',
-        employeeName: 'Иван Иванов',
-        status: 'pending',
-        priority: 'high',
-        startDate: new Date().toISOString(),
-        endDate: new Date(Date.now() + 86400000).toISOString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    ]
-    
-    return {
-      data: tasks,
-      total: tasks.length,
-      page: 1,
-      limit: 10,
-      totalPages: 1
-    }
-  }
-
-  private getMockMapLocations() {
-    return [
-      {
-        id: '1',
-        name: 'Встреча с клиентом',
-        type: 'meeting',
-        latitude: 55.7558,
-        longitude: 37.6176,
-        address: 'ул. Ленина, 1',
-        description: 'Обсуждение проекта',
-        status: 'scheduled',
-        priority: 'vip'
-      }
-    ]
-  }
-
-  private getMockStatistics() {
-    return {
-      totalMeetings: 156,
-      completedMeetings: 142,
-      postponedMeetings: 8,
-      cancelledMeetings: 6,
-      totalTasks: 89,
-      completedTasks: 67,
-      pendingTasks: 22,
-      totalClients: 45,
-      vipClients: 12,
-      standardClients: 33
-    }
-  }
-
-  private createMockMeeting(data: any) {
-    return {
-      id: 'meeting-' + Date.now(),
-      ...data,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
-  }
-
-  private createMockClient(data: any) {
-    return {
-      id: 'client-' + Date.now(),
-      ...data,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
-  }
-
-  private createMockTask(data: any) {
-    return {
-      id: 'task-' + Date.now(),
-      ...data,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
   }
 }
 

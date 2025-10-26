@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Plus, Search, Filter, Calendar, Clock, User, CheckSquare } from 'lucide-react'
-import { useTasks } from '@/hooks/useTasks'
+import { useTasks, useCreateTask, useUpdateTask, useDeleteTask } from '@/hooks/useTasks'
 import { TaskFilters } from '@/types'
 
 export const TasksPage = () => {
@@ -12,6 +12,10 @@ export const TasksPage = () => {
     ...filters,
     search: searchQuery || undefined,
   })
+  
+  const createTaskMutation = useCreateTask()
+  const updateTaskMutation = useUpdateTask()
+  const deleteTaskMutation = useDeleteTask()
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('ru-RU', {
@@ -47,12 +51,35 @@ export const TasksPage = () => {
     }
   }
 
+  const handleCreateTask = () => {
+    // TODO: Implement create task modal
+    console.log('Create task')
+  }
+
+  const handleEditTask = (taskId: string) => {
+    // TODO: Implement edit task modal
+    console.log('Edit task:', taskId)
+  }
+
+  const handleDeleteTask = async (taskId: string) => {
+    if (window.confirm('Вы уверены, что хотите удалить эту задачу?')) {
+      try {
+        await deleteTaskMutation.mutateAsync(taskId)
+      } catch (error) {
+        console.error('Error deleting task:', error)
+      }
+    }
+  }
+
   return (
     <div className="p-6">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold text-gray-900">Задания</h1>
-          <button className="btn-primary flex items-center">
+          <button 
+            className="btn-primary flex items-center"
+            onClick={handleCreateTask}
+          >
             <Plus className="h-4 w-4 mr-2" />
             Добавить задачу
           </button>
@@ -230,10 +257,16 @@ export const TasksPage = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end space-x-2">
-                        <button className="text-primary-600 hover:text-primary-900">
+                        <button 
+                          className="text-primary-600 hover:text-primary-900"
+                          onClick={() => handleEditTask(task.id)}
+                        >
                           Редактировать
                         </button>
-                        <button className="text-red-600 hover:text-red-900">
+                        <button 
+                          className="text-red-600 hover:text-red-900"
+                          onClick={() => handleDeleteTask(task.id)}
+                        >
                           Удалить
                         </button>
                       </div>

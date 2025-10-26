@@ -68,14 +68,14 @@ export const LandingPage = () => {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center space-x-3">
-                <img 
-                  src="/src/assets/images/logo.png" 
-                  alt="ЦентрИнвест" 
-                  className="h-10 w-10 object-contain"
+                <img
+                  src="/src/assets/images/logo.png"
+                  alt="WeRoute"
+                  className="h-14 w-14 object-contain"
                 />
                 <div>
-                  <h1 className="text-3xl font-display font-bold text-gradient">ЦентрИнвест</h1>
-                  <p className="text-sm text-text-secondary">Управление встречами</p>
+                  <h1 className="text-4xl font-display font-bold text-gradient">WeRoute</h1>
+                  <p className="text-sm text-text-secondary font-medium">Управление встречами</p>
                 </div>
               </div>
             </div>
@@ -352,12 +352,20 @@ export const LandingPage = () => {
       {/* Footer */}
 
 {/* Footer */}
-<footer className="relative z-10 bg-gradient-to-br from-text-primary to-gray-800 text-white">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+<footer className="relative z-10 bg-gradient-to-br from-primary-900 via-primary-800 to-accent-900 text-white overflow-hidden">
+  <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+  <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
       <div className="space-y-4">
-        <h3 className="text-2xl font-display font-bold text-gradient">ЦентрИнвест</h3>
-        <p className="text-gray-300 leading-relaxed">
+        <div className="flex items-center space-x-3">
+          <img
+            src="/src/assets/images/logo.png"
+            alt="WeRoute"
+            className="h-12 w-12 object-contain"
+          />
+          <h3 className="text-3xl font-display font-bold text-white">WeRoute</h3>
+        </div>
+        <p className="text-gray-200 leading-relaxed text-sm">
           Управление встречами и бизнес-процессами нового поколения
         </p>
         <div className="mb-4">
@@ -368,15 +376,18 @@ export const LandingPage = () => {
         <h4 className="text-lg font-semibold mb-6 text-white">Продукт</h4>
         <ul className="space-y-3">
           <li><a href="#features" className="text-gray-300 hover:text-accent-400 transition-colors">Возможности</a></li>
+          <li><a href="https://www.centrinvest.ru" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-accent-400 transition-colors">Сайт банка</a></li>
+          <li><a href="https://www.centrinvest.ru/ru/business/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-accent-400 transition-colors">Для бизнеса</a></li>
         </ul>
       </div>
-      
+
       <div>
         <h4 className="text-lg font-semibold mb-6 text-white">Поддержка</h4>
         <ul className="space-y-3">
-          <li><a href="#" className="text-gray-300 hover:text-accent-400 transition-colors">Помощь</a></li>
-          <p className="text-white font-semibold">8 800 200 99 29</p>
-          <li><a href="#" className="text-gray-300 hover:text-accent-400 transition-colors">Контакты</a></li>
+          <li><a href="https://www.centrinvest.ru/ru/support/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-accent-400 transition-colors">Помощь</a></li>
+          <li><a href="tel:88002009929" className="text-white font-semibold hover:text-accent-400 transition-colors">8 800 200 99 29</a></li>
+          <li><a href="https://www.centrinvest.ru/ru/contacts/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-accent-400 transition-colors">Контакты</a></li>
+          <li><a href="https://www.centrinvest.ru/ru/about/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-accent-400 transition-colors">О банке</a></li>
         </ul>
       </div>
       
@@ -433,13 +444,22 @@ export const LandingPage = () => {
         <p className="text-gray-400 text-xs">Подпишитесь на наши соцсети</p>
       </div>
     </div>
-    
-    <div className="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-      <p className="text-gray-400">&copy; 2025 ЦентрИнвест. Все права защищены.</p>
-      <div className="flex items-center space-x-2 mt-4 md:mt-0">
-        <span className="text-gray-400">Сделано с</span>
-        <div className="w-4 h-4 text-accent-400 animate-pulse">❤️</div>
-        <span className="text-gray-400">в России</span>
+
+    <div className="border-t border-white/20 mt-12 pt-8">
+      <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+        <p className="text-gray-300 text-sm">&copy; 2025 WeRoute. Все права защищены.</p>
+        <div className="flex items-center space-x-3">
+          <span className="text-gray-300 text-sm">Сделано с</span>
+          <div className="w-5 h-5 text-red-400 animate-pulse">❤️</div>
+          <span className="text-gray-300 text-sm">для вашего бизнеса</span>
+        </div>
+      </div>
+      <div className="mt-6 flex flex-wrap justify-center gap-4 text-xs text-gray-400">
+        <a href="#" className="hover:text-white transition-colors">Политика конфиденциальности</a>
+        <span>•</span>
+        <a href="#" className="hover:text-white transition-colors">Условия использования</a>
+        <span>•</span>
+        <a href="#" className="hover:text-white transition-colors">Документация</a>
       </div>
     </div>
   </div>

@@ -70,6 +70,7 @@ export interface CreateMeetingData {
   priority: 'standard' | 'vip'
   isRecurring: boolean
   recurringPattern?: string
+  meetingType?: MeetingType
 }
 
 // Client types

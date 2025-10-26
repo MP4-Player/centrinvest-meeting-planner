@@ -63,17 +63,17 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       `}>
       <div className="flex flex-col h-full">
 {/* Header */}
-<div className="flex items-center justify-between p-2 border-b-1 border-gray-200">
+<div className="flex items-center justify-between p-3 border-b-2 border-primary-200 bg-gradient-to-r from-primary-50 to-white">
   {!collapsed && (
     <div className="flex items-center space-x-3">
       <img
         src="/src/assets/images/logo.png"
-        alt="ЦентрИнвест"
-        className="h-8 w-8 object-contain"
+        alt="WeRoute"
+        className="h-12 w-12 object-contain"
       />
       <div>
-        <h1 className="text-lg font-bold text-gray-900">ЦентрИнвест</h1>
-        <p className="text-xs text-gray-500">Управление встречами</p>
+        <h1 className="text-2xl font-bold text-primary-700">WeRoute</h1>
+        <p className="text-xs text-primary-600 font-medium">Управление встречами</p>
       </div>
     </div>
   )}
@@ -149,15 +149,29 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               <Bell className="h-5 w-5 flex-shrink-0" />
               {!collapsed && <span className="ml-3">Уведомления</span>}
             </button>
-            
-            <button
+
+            <a
+              href="https://www.centrinvest.ru/ru/support/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center w-full px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg"
               title={collapsed ? 'Помощь' : undefined}
             >
               <HelpCircle className="h-5 w-5 flex-shrink-0" />
               {!collapsed && <span className="ml-3">Помощь</span>}
-            </button>
-            
+            </a>
+
+            <a
+              href="https://www.centrinvest.ru"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center w-full px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg"
+              title={collapsed ? 'Сайт банка' : undefined}
+            >
+              <Building2 className="h-5 w-5 flex-shrink-0" />
+              {!collapsed && <span className="ml-3">Сайт банка</span>}
+            </a>
+
             <button
               onClick={logout}
               className="flex items-center w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 rounded-lg"

@@ -9,6 +9,7 @@ import { MeetingTypesPage } from '@/pages/dashboard/MeetingTypesPage'
 import { SchedulePage } from '@/pages/dashboard/SchedulePage'
 import { StatisticsPage } from '@/pages/dashboard/StatisticsPage'
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
+import { SearchProvider } from '@/contexts/SearchContext'
 
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -43,81 +44,83 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
 function App() {
   return (
     <ErrorBoundary>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<LandingPage />} />
-        <Route 
-          path="/login" 
-          element={
-            <PublicRoute>
-              <LoginForm />
-            </PublicRoute>
-          } 
-        />
-        <Route 
-          path="/register" 
-          element={
-            <PublicRoute>
-              <RegisterForm />
-            </PublicRoute>
-          } 
-        />
+      <SearchProvider>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<LandingPage />} />
+          <Route 
+            path="/login" 
+            element={
+              <PublicRoute>
+                <LoginForm />
+              </PublicRoute>
+            } 
+          />
+          <Route 
+            path="/register" 
+            element={
+              <PublicRoute>
+                <RegisterForm />
+              </PublicRoute>
+            } 
+          />
 
-        {/* Protected Routes */}
-        <Route 
-          path="/dashboard" 
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Navigate to="/dashboard/map" replace />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/dashboard/map" 
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <MapPage />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route
-          path="/dashboard/meeting-types"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <MeetingTypesPage />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/schedule"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <SchedulePage />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/statistics"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <StatisticsPage />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+          {/* Protected Routes */}
+          <Route 
+            path="/dashboard" 
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Navigate to="/dashboard/map" replace />
+                </Layout>
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/map" 
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <MapPage />
+                </Layout>
+              </ProtectedRoute>
+            } 
+          />
+          <Route
+            path="/dashboard/meeting-types"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <MeetingTypesPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/schedule"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <SchedulePage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/statistics"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <StatisticsPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Catch all route */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          {/* Catch all route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </SearchProvider>
     </ErrorBoundary>
   )
 }

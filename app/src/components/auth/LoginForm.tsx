@@ -43,7 +43,7 @@ export const LoginForm = () => {
             <p className="text-sm text-blue-800">
               <strong>Админ-доступ:</strong><br />
               Email: <code className="bg-blue-100 px-1 rounded">admin@example.com</code><br />
-              Пароль: <code className="bg-blue-100 px-1 rounded">Admin</code>
+              Пароль: <code className="bg-blue-100 px-1 rounded">Admin1</code>
             </p>
           </div>
         </div>
@@ -88,8 +88,8 @@ export const LoginForm = () => {
                   {...register('password', {
                     required: 'Пароль обязателен',
                     minLength: {
-                      value: 6,
-                      message: 'Пароль должен содержать минимум 6 символов',
+                      value: 5,
+                      message: 'Пароль должен содержать минимум 5 символов',
                     },
                   })}
                   type={showPassword ? 'text' : 'password'}

@@ -139,8 +139,8 @@ export const RegisterForm = () => {
                   {...register('password', {
                     required: 'Пароль обязателен',
                     minLength: {
-                      value: 6,
-                      message: 'Пароль должен содержать минимум 6 символов',
+                      value: 5,
+                      message: 'Пароль должен содержать минимум 5 символов',
                     },
                   })}
                   type={showPassword ? 'text' : 'password'}

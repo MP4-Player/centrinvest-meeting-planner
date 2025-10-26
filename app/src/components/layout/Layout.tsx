@@ -1,6 +1,7 @@
 import { ReactNode, useState } from 'react'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
+import { NotificationPermission } from '@/components/ui/NotificationPermission'
 
 interface LayoutProps {
   children: ReactNode
@@ -18,6 +19,7 @@ export const Layout = ({ children }: LayoutProps) => {
           {children}
         </main>
       </div>
+      <NotificationPermission />
     </div>
   )
 }

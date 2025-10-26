@@ -18,6 +18,7 @@ export const ScheduleTab = ({
   const [localSchedule, setLocalSchedule] = useState<ScheduleItem[]>(schedule)
   const [draggedItem, setDraggedItem] = useState<ScheduleItem | null>(null)
   const [touchDragItem, setTouchDragItem] = useState<ScheduleItem | null>(null)
+  const [dragOverDate, setDragOverDate] = useState<string | null>(null)
 
   const handleDragStart = (item: ScheduleItem) => {
     setDraggedItem(item)
@@ -34,20 +35,90 @@ export const ScheduleTab = ({
     if (draggedIndex === -1 || targetIndex === -1) return
 
     const newSchedule = [...localSchedule]
-    newSchedule.splice(draggedIndex, 1)
-    newSchedule.splice(targetIndex, 0, draggedItem)
+    const [removed] = newSchedule.splice(draggedIndex, 1)
+    newSchedule.splice(targetIndex, 0, removed)
 
-    // Update order
+    // Update order immediately
     const updatedSchedule = newSchedule.map((item, index) => ({
       ...item,
       order: index + 1,
     }))
 
     setLocalSchedule(updatedSchedule)
+    setDraggedItem(removed) // Keep reference updated
   }
 
   const handleDragEnd = () => {
     setDraggedItem(null)
+    setDragOverDate(null)
+  }
+
+  // Handle drop on date container (for moving meetings between dates)
+  const handleDateContainerDragOver = (e: React.DragEvent, dateKey: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragOverDate(dateKey)
+  }
+
+  const handleDateContainerDrop = (e: React.DragEvent, dateKey: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragOverDate(null)
+
+    if (!draggedItem) return
+
+    // Parse the target date from dateKey (format: "26 октября 2025 г.")
+    const targetDateObj = parseDateKey(dateKey)
+    if (!targetDateObj) return
+
+    // Update the meeting's date
+    const updatedSchedule = localSchedule.map((item) => {
+      if (item.id === draggedItem.id) {
+        const oldStartDate = new Date(item.meeting.startDate)
+        const oldEndDate = new Date(item.meeting.endDate)
+
+        // Keep the same time, just change the date
+        const newStartDate = new Date(targetDateObj)
+        newStartDate.setHours(oldStartDate.getHours(), oldStartDate.getMinutes(), 0, 0)
+
+        const newEndDate = new Date(targetDateObj)
+        newEndDate.setHours(oldEndDate.getHours(), oldEndDate.getMinutes(), 0, 0)
+
+        return {
+          ...item,
+          meeting: {
+            ...item.meeting,
+            startDate: newStartDate.toISOString(),
+            endDate: newEndDate.toISOString(),
+          }
+        }
+      }
+      return item
+    })
+
+    setLocalSchedule(updatedSchedule)
+    setDraggedItem(null)
+  }
+
+  // Helper to parse Russian date string
+  const parseDateKey = (dateKey: string): Date | null => {
+    const months: { [key: string]: number } = {
+      'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3,
+      'мая': 4, 'июня': 5, 'июля': 6, 'августа': 7,
+      'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11
+    }
+
+    // dateKey format: "26 октября 2025 г."
+    const parts = dateKey.replace(' г.', '').split(' ')
+    if (parts.length !== 3) return null
+
+    const day = parseInt(parts[0])
+    const month = months[parts[1]]
+    const year = parseInt(parts[2])
+
+    if (isNaN(day) || month === undefined || isNaN(year)) return null
+
+    return new Date(year, month, day)
   }
 
   const handleSave = () => {
@@ -70,11 +141,11 @@ export const ScheduleTab = ({
 
   const getMeetingTypeLabel = (meeting: MeetingWithType) => {
     const typeLabels = {
-      work_meeting: 'Знакомство',
-      partner_meeting: 'Презентация',
-      client_meeting: 'Обсуждение',
-      briefing: 'Подписание',
-      product_presentation: 'Консультация',
+      work_meeting: 'Рабочие совещания',
+      partner_meeting: 'Встречи с партнерами',
+      client_meeting: 'Встречи с клиентами',
+      briefing: 'Брифинг',
+      product_presentation: 'Презентация продукта',
       business_lunch: 'Бизнес ланч',
       other: 'Иное',
     }
@@ -177,16 +248,31 @@ export const ScheduleTab = ({
             </div>
           ) : (
             Object.entries(meetingsByDate).map(([date, items]) => (
-              <div key={date} className="mb-4">
-                {/* Date Header */}
-                <div className="sticky top-12 bg-white border-b-2 border-primary-200 pb-2 mb-3">
-                  <h4 className="text-xs sm:text-sm font-bold text-primary-700">
-                    {date} <span className="text-gray-500 font-normal">({items.length} встреч)</span>
-                  </h4>
+              <div
+                key={date}
+                className="mb-4"
+                onDragOver={(e) => handleDateContainerDragOver(e, date)}
+                onDrop={(e) => handleDateContainerDrop(e, date)}
+              >
+                {/* Date Header - merged with title */}
+                <div className={`sticky top-12 bg-gradient-to-r from-primary-50 to-primary-100 border-2 rounded-lg p-3 mb-3 z-10 transition-all shadow-sm ${
+                  dragOverDate === date ? 'border-blue-500 bg-blue-50' : 'border-primary-300'
+                }`}>
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm sm:text-base font-bold text-primary-800">
+                      Расписание встреч
+                    </h4>
+                    <span className="text-xs sm:text-sm font-semibold text-primary-600 bg-white px-3 py-1 rounded-full">
+                      {items.length} встреч
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-primary-700 mt-1 font-medium">{date}</p>
                 </div>
 
                 {/* Meetings for this date */}
-                <div className="space-y-2">
+                <div className={`space-y-2 min-h-[60px] p-2 rounded transition-colors ${
+                  dragOverDate === date ? 'bg-blue-50' : ''
+                }`}>
                   {items.map((item) => {
                     const globalIndex = localSchedule.findIndex(i => i.id === item.id)
                     return (
@@ -298,12 +384,14 @@ const ScheduleItemCard = ({
           </div>
 
           {/* Meeting type */}
-          <div className="flex items-center text-xs text-gray-600">
-            <span className="font-medium mr-1">Тип:</span>
-            <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded">
-              {getMeetingTypeLabel(meeting)}
-            </span>
-          </div>
+          {meeting.meetingType && (
+            <div className="flex items-center text-xs text-gray-600">
+              <span className="font-medium mr-1">Тип:</span>
+              <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded">
+                {getMeetingTypeLabel(meeting)}
+              </span>
+            </div>
+          )}
 
           {/* Client */}
           <div className="flex items-center text-xs text-gray-600">

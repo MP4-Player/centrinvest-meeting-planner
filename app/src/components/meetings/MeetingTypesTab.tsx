@@ -309,6 +309,11 @@ export const MeetingTypesTab = ({
             <span className="font-medium">Место:</span> {meeting.location}
           </p>
         )}
+        {meeting.meetingType && (
+          <p className="text-gray-600 line-clamp-1">
+            <span className="font-medium">Тип:</span> {meeting.meetingType}
+          </p>
+        )}
         <div className="flex items-center justify-between mt-1">
           <span
             className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${

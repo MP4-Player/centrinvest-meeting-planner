@@ -20,6 +20,7 @@ export const MeetingFormModal = ({
   const [formData, setFormData] = useState<Partial<MeetingWithType>>({
     title: '',
     description: '',
+    clientId: '',
     clientName: '',
     location: '',
     address: '',
@@ -29,6 +30,14 @@ export const MeetingFormModal = ({
     meetingType: undefined,
   })
 
+  const [clients, setClients] = useState<any[]>([])
+
+  // Load clients from localStorage
+  useEffect(() => {
+    const storedClients = JSON.parse(localStorage.getItem('mock_clients') || '[]')
+    setClients(storedClients)
+  }, [])
+
   useEffect(() => {
     if (meeting && mode === 'edit') {
       setFormData(meeting)
@@ -37,6 +46,7 @@ export const MeetingFormModal = ({
       setFormData({
         title: '',
         description: '',
+        clientId: '',
         clientName: '',
         location: '',
         address: '',
@@ -50,7 +60,15 @@ export const MeetingFormModal = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onSave(formData)
+
+    // Преобразуем формат даты если нужно
+    const submitData = {
+      ...formData,
+      startDate: formData.startDate ? new Date(formData.startDate).toISOString() : new Date().toISOString(),
+      endDate: formData.endDate ? new Date(formData.endDate).toISOString() : new Date().toISOString(),
+    }
+
+    onSave(submitData)
     onClose()
   }
 
@@ -58,7 +76,23 @@ export const MeetingFormModal = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+
+    // If client is changed, update both clientId and clientName
+    if (name === 'clientId') {
+      const selectedClient = clients.find(c => c.id === value)
+      if (selectedClient) {
+        setFormData((prev) => ({
+          ...prev,
+          clientId: value,
+          clientName: `${selectedClient.firstName} ${selectedClient.lastName}`,
+          address: selectedClient.address || prev.address
+        }))
+      } else {
+        setFormData((prev) => ({ ...prev, [name]: value }))
+      }
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }))
+    }
   }
 
   if (!isOpen) return null
@@ -119,15 +153,20 @@ export const MeetingFormModal = ({
                 <label className="block text-xs font-medium text-gray-700 mb-1">
                   С кем встреча *
                 </label>
-                <input
-                  type="text"
-                  name="clientName"
-                  value={formData.clientName}
+                <select
+                  name="clientId"
+                  value={formData.clientId}
                   onChange={handleChange}
                   required
                   className="input-field text-sm py-2"
-                  placeholder="Имя клиента"
-                />
+                >
+                  <option value="">Выберите клиента</option>
+                  {clients.map((client) => (
+                    <option key={client.id} value={client.id}>
+                      {client.firstName} {client.lastName}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 

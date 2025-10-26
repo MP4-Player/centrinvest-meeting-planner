@@ -10,7 +10,7 @@ export const MapPage = () => {
     // Load map locations
     const loadLocations = async () => {
       try {
-        await apiService.get('/map/locations')
+        // Map functionality will be added later
         setMapLoaded(true)
       } catch (error) {
         console.error('Error loading locations:', error)

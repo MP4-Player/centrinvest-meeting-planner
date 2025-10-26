@@ -53,7 +53,7 @@ npm run dev
 
 ### Войти в систему:
 - Email: `admin@example.com`
-- Password: `Admin`
+- Password: `Admin1`
 
 ### Создание тестовой встречи:
 1. Нажмите "+ Создать встречу"

@@ -1,19 +1,19 @@
-import { apiService } from './api'
+import { MockStorageService } from './mockStorage'
 import { AuthUser, LoginCredentials, RegisterData } from '@/types'
 
 export class AuthService {
   private static readonly TOKEN_KEY = 'authToken'
-  private static readonly USER_KEY = 'user'
+  private static readonly USER_KEY = 'mock_current_user'
 
   static async login(credentials: LoginCredentials) {
-    const response = await apiService.login(credentials)
+    const response = await MockStorageService.login(credentials)
     this.setToken(response.token)
     this.setUser(response.user)
     return response
   }
 
   static async register(data: RegisterData) {
-    const response = await apiService.register(data)
+    const response = await MockStorageService.register(data)
     this.setToken(response.token)
     this.setUser(response.user)
     return response
@@ -21,7 +21,7 @@ export class AuthService {
 
   static async logout() {
     try {
-      await apiService.logout()
+      await MockStorageService.logout()
     } catch (error) {
       console.error('Logout error:', error)
     } finally {

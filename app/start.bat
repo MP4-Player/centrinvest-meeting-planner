@@ -8,7 +8,7 @@ echo Приложение будет доступно по адресу: http://
 echo.
 echo Данные для входа:
 echo Email: admin@example.com
-echo Пароль: Admin
+echo Пароль: Admin1
 echo.
 npm run dev
 pause

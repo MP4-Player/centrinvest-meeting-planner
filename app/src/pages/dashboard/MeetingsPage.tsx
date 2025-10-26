@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useMeetings } from '@/hooks/useMeetings'
+import { useMeetings, useCreateMeeting, useUpdateMeeting, useDeleteMeeting, useOptimizeRoute } from '@/hooks/useMeetings'
 import { MeetingWithType, ScheduleItem } from '@/types'
 import { MeetingTypesTab } from '@/components/meetings/MeetingTypesTab'
 import { ScheduleTab } from '@/components/meetings/ScheduleTab'
@@ -12,6 +12,10 @@ export const MeetingsPage = () => {
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create')
 
   const { data: meetingsData, isLoading } = useMeetings({})
+  const createMeetingMutation = useCreateMeeting()
+  const updateMeetingMutation = useUpdateMeeting()
+  const deleteMeetingMutation = useDeleteMeeting()
+  const optimizeRouteMutation = useOptimizeRoute()
 
   // Convert meetings to MeetingWithType
   const meetings: MeetingWithType[] = meetingsData?.data || []
@@ -36,33 +40,61 @@ export const MeetingsPage = () => {
     setIsModalOpen(true)
   }
 
-  const handleDeleteMeeting = (meetingId: string) => {
-    // TODO: Implement delete meeting API call
-    console.log('Delete meeting:', meetingId)
+  const handleDeleteMeeting = async (meetingId: string) => {
+    if (window.confirm('Вы уверены, что хотите удалить эту встречу?')) {
+      try {
+        await deleteMeetingMutation.mutateAsync(meetingId)
+      } catch (error) {
+        console.error('Error deleting meeting:', error)
+      }
+    }
   }
 
   const handleSaveMeetings = (updatedMeetings: MeetingWithType[]) => {
-    // TODO: Implement save meetings API call
+    // TODO: Implement bulk update if needed
     console.log('Save meetings:', updatedMeetings)
   }
 
   const handleSaveSchedule = (updatedSchedule: ScheduleItem[]) => {
-    // TODO: Implement save schedule API call
+    // TODO: Implement schedule update
     console.log('Save schedule:', updatedSchedule)
   }
 
-  const handleOptimizeRoute = () => {
-    // TODO: Implement route optimization API call
-    console.log('Optimize route')
+  const handleOptimizeRoute = async () => {
+    const meetingIds = meetings.map(m => m.id)
+    if (meetingIds.length === 0) {
+      alert('Нет встреч для оптимизации')
+      return
+    }
+
+    try {
+      const result = await optimizeRouteMutation.mutateAsync({
+        meetingIds,
+        startLocation: {
+          latitude: 55.7558,
+          longitude: 37.6176,
+          address: 'Москва, Красная площадь'
+        }
+      })
+      console.log('Optimized route:', result)
+    } catch (error) {
+      console.error('Error optimizing route:', error)
+    }
   }
 
-  const handleSaveMeeting = (meeting: Partial<MeetingWithType>) => {
-    if (modalMode === 'create') {
-      // TODO: Implement create meeting API call
-      console.log('Create meeting:', meeting)
-    } else {
-      // TODO: Implement update meeting API call
-      console.log('Update meeting:', meeting)
+  const handleSaveMeeting = async (meeting: Partial<MeetingWithType>) => {
+    try {
+      if (modalMode === 'create') {
+        await createMeetingMutation.mutateAsync(meeting as any)
+      } else if (editingMeeting) {
+        await updateMeetingMutation.mutateAsync({
+          id: editingMeeting.id,
+          meeting: meeting as any
+        })
+      }
+      setIsModalOpen(false)
+    } catch (error) {
+      console.error('Error saving meeting:', error)
     }
   }
 
@@ -121,6 +153,7 @@ export const MeetingsPage = () => {
             onCreateMeeting={handleCreateMeeting}
             onEditMeeting={handleEditMeeting}
             onDeleteMeeting={handleDeleteMeeting}
+            onSetStartingPoint={(address: string) => console.log('Set starting point:', address)}
           />
         ) : (
           <ScheduleTab
