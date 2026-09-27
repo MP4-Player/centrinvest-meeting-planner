@@ -1,0 +1,13 @@
+# Secrets
+.env
+
+# Dependencies, caches, IDE
+node_modules/
+dist/
+__pycache__/
+*.py[cod]
+myenv/
+.venv/
+venv/
+.idea/
+.vscode/
